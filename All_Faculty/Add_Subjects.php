@@ -1,0 +1,675 @@
+<?php
+session_start();
+//require("connect.php");
+//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);  // erase  notice
+require("../DB/config.php");
+require("../Authenticate/Faculty.php");
+
+
+//$Course_Registration_Head="menu-open";
+//$Add_Subjects="active";
+
+$PageName="Add Your Subjects";
+$Entry_Head="menu-open";
+$Add_Subjects="active";
+$Faculty_ID=$_SESSION['F_ID'];
+
+
+
+
+$C_msg="";
+
+
+if($_POST)
+{
+$C_Date=$_POST['C_Date'];
+$Sub_ID=$_POST['Subject'];
+$Section=$_POST['Section'];
+$L_Batch=$_POST['L_Batch'];
+
+if(isset($_POST['D_Submit']))
+{
+$sql1="select * from Faculty_Subjects where Faculty_ID='$Faculty_ID' and Sub_ID='$Sub_ID' and Course_Date='$C_Date'
+and Section='$Section' and LBatch='$L_Batch'";
+$query1 = $dbh->prepare($sql1);
+$query1->execute();
+$count = $query1->rowCount();
+if($count==0)
+{
+  $count2=0;
+  if($Section!="")
+  {
+  $sql2="select * from Faculty_Subjects where Sub_ID='$Sub_ID' and Course_Date='$C_Date' and Section='$Section' and LBatch='$L_Batch'";
+  $query2 = $dbh->prepare($sql2);
+  $query2->execute();
+  $count2 = $query2->rowCount();
+  }
+  if($count2==0)
+  {
+	$sql2="insert into Faculty_Subjects (Faculty_ID,Sub_ID,Course_Date,Section,LBatch,Finalized)
+	values('$Faculty_ID','$Sub_ID','$C_Date','$Section','$L_Batch','0')";
+	$query2 = $dbh->prepare($sql2);
+
+ 	if($query2->execute())
+ 	{
+
+	$C_msg="Subject is Added Successfully";
+ 	}
+ 	else
+ 	{
+	$C_msg="Error with Insertion";
+ 	}
+ }
+ else
+ {
+ 	$C_msg="Subject Already Chosen By Other Faculty";
+ }
+}
+else
+{
+	$C_msg="Subject Already Exist in Your List";
+}//Insert End
+}//Submit End
+}// POST End
+
+?>
+
+
+
+<?php require('../Head/Head.php'); ?>
+
+
+
+
+<style>
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+
+
+
+
+
+
+
+
+
+ <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid" >
+        <div class="row mb-2" >
+
+          <div id="myModal" class="modal">
+  		<!-- Modal content -->
+  		<div class="modal-content">
+    		<span class="close">&times;</span>
+    		<p><?php echo $C_msg; ?></p>
+  		</div>
+	</div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+
+
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <form method="post" action="Add_Subjects.php">
+
+         <!-- SELECT2 EXAMPLE -->
+        <div class="card card-default" style="margin-top:-25px;">
+
+          <!-- /.card-header -->
+
+
+
+          <div class="card-body" >
+            <div class="row">
+
+
+		<div class="col-md-2">
+		 <div class="form-group">
+                  <label>Course Date</label>
+
+                   <select class="form-control select2"  id="C_Date" name="C_Date"  required>
+
+                    <option selected="selected"></option>
+                   <?php
+
+                    	$sql ="SELECT Course_Date FROM Course_Subjects Group By Course_Date order by Course_Date desc limit 1  ";
+    			$query= $dbh -> prepare($sql);
+    			$query-> execute();
+    			$results2=$query->fetchAll(PDO::FETCH_OBJ);
+    			foreach($results2 as $result2)
+    			{  ?>
+    			<option value="<?php echo $result2->Course_Date;?>"> <?php echo $result2->Course_Date;?> </option>
+    			<?php
+    			}  ?>
+                  </select>
+                 </div>
+                 <!-- /.form-group -->
+		</div>
+
+
+		<div class="col-md-2">
+		  <div class="form-group">
+                   <label>Exam Type</label>
+                   <select class="form-control select2"  id="Exam_Type" name="Exam_Type"  required>
+
+                    <option value="" selected="selected"></option>
+
+
+                  </select>
+                  </div>
+                <!-- /.form-group -->
+		</div>
+
+
+		<div class="col-md-1">
+		  <div class="form-group">
+                   <label>Sem</label>
+
+                   <select class="form-control select2"  id="Sem" name="Sem"  required>
+                    <option selected="selected"></option>
+
+                  </select>
+                  </div>
+                <!-- /.form-group -->
+		</div>
+
+		<div class="col-md-2">
+		  <div class="form-group">
+                   <label>Branch</label>
+
+                   <select class="form-control select2"  id="Branch" name="Branch"  required>
+                    <option selected="selected"></option>
+
+                  </select>
+                  </div>
+                <!-- /.form-group -->
+		</div>
+
+
+	  <!-- 	<div class="col-md-2" id="SectionS" name="SectionS">
+		  <div class="form-group">
+                   <label>Section</label>
+                    <select class="form-control select2"  id="Section" name="Section" >
+                        <option value="A" selected="selected">A</option>
+                    </select>
+                  </div>
+                <!-- /.form-group
+		</div>
+-->
+
+		<div class="col-md-7">
+		  <div class="form-group">
+                   <label>Choose Subject</label>
+
+                   <select class="form-control select2"  id="Subject" name="Subject"  required>
+                    <option selected="selected"></option>
+
+                  </select>
+                  </div>
+                <!-- /.form-group -->
+		</div>
+
+		<div class="col-md-2" id="L_BatchS" name="L_BatchS">
+		  <div class="form-group">
+                   <label>Lab Batch</label>
+                    <select class="form-control select2"  id="L_Batch" name="L_Batch" >
+                        <option value="" selected="selected"></option>
+                    </select>
+                  </div>
+                <!-- /.form-group -->
+		</div>
+
+
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+             <div class="card-footer">
+
+
+	   <center><button type="submit" name="D_Submit" id="D_Submit" class="btn  btn-outline-success btn-lg ">
+	   Add Subject</button></center>
+
+
+          </div>
+
+          </div>
+          <!-- /.card-body -->
+         </div>
+
+
+
+         </form>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+
+
+
+
+
+
+
+
+
+<section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-12">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title"><b>Your Subjects of Course Date  </b></h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 200px;">
+
+
+                     <select class="form-control select2 float-right"  id="S_CDate" name="S_CDate"  required>
+                     <option selected="selected"></option>
+                   <?php
+
+               $sql ="SELECT Course_Date FROM Faculty_Subjects where Faculty_ID='". $_SESSION['F_ID'] ."'
+               Group By Course_Date  Order By Course_Date DESC";
+    			$query= $dbh -> prepare($sql);
+    			$query-> execute();
+    			$results2=$query->fetchAll(PDO::FETCH_OBJ);
+    			foreach($results2 as $result2)
+    			{  ?>
+    			<option value="<?php echo $result2->Course_Date;?>"> <?php echo $result2->Course_Date;?> </option>
+    			<?php
+    			}  ?>
+
+                  </select>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+
+
+
+              <!--   Display  CompanyWise Registraion Count  -->
+
+              <div class="card-body table-responsive p-0" style="height: 400px;">
+                <table class="table table-head-fixed table-hover text-nowrap">
+                 <thead style="cursor: pointer;">
+                    <tr>
+
+                      <th>Exam</th>
+                      <th>Sub_Type</th>
+                      <th>Sub_Code</th>
+                      <th>Sub_Name</th>
+                      <th>Sem</th>
+                      <th>Branch</th>
+                      <th>Section</th>
+                      
+
+                    </tr>
+                  </thead>
+                  <tbody id="TBY">
+
+
+                  	<!--  Table from Ajax -->
+
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <!-- /.row -->
+
+         <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+ </div>
+  <!-- /.content-wrapper -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+// Get the button that opens the modal
+//var btn = document.getElementById("myBtn");
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+// When the user clicks the button, open the modal
+<?php
+	if($C_msg!="")
+	{
+		echo "modal.style.display = 'block';";
+	}
+	else
+	{
+		echo "modal.style.display = 'none';";
+	}
+?>
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+
+
+
+
+<?php require('../Head/Foot.php');   ?>
+
+<script>
+
+$("#S_CDate").change(function ()
+{
+     var C_Date = $("#S_CDate").val();
+
+
+     if(C_Date!="")
+     {
+      $.ajax({
+	type: 'POST',
+	url: 'Ajax/Fetch_Subjects.php',
+	data: {C_Date:C_Date},
+	success:function(data)
+		{
+		//alert(data);
+		$("#TBY").html(data);
+
+		}
+	    });
+      }
+      else
+      {
+      $("#TBY").html("");
+      }
+});
+
+
+
+$('th').click(function(){
+    var table = $(this).parents('table').eq(0)
+    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+    this.asc = !this.asc
+    if (!this.asc){rows = rows.reverse()}
+    for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+})
+function comparer(index) {
+    return function(a, b) {
+        var valA = getCellValue(a, index), valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+}
+function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+
+
+
+$("#SectionS").hide();
+$("#L_BatchS").hide();
+
+
+ function Lab_Fold()
+ {
+    $("#L_BatchS").hide();
+    $("#L_Batch").val("").change();
+    $("#L_Batch").prop('required',false);
+ }
+  function Lab_Show()
+ {
+   $("#L_BatchS").show();
+   $("#L_Batch").prop('required',true);
+ }
+
+
+ function Sec_Fold()
+ {
+    $("#SectionS").hide();
+    $("#Section").val("").change();
+    $("#Section").prop('required',false);
+ }
+  function Sec_Show()
+ {
+   $("#SectionS").show();
+   $("#Section").prop('required',true);
+ }
+
+
+
+
+
+$("#C_Date").change(function()
+{
+    var val = $("#C_Date").val();
+    var val2="Exam_Type";
+    if(val!="")
+    {
+    $.ajax({
+	type: 'POST',
+	url: 'Ajax/Data_Fetch.php',
+	data: {C_Date:val,Fetch:val2},
+	success:function(data)
+		{
+		$("#Exam_Type").html(data);
+		Sec_Fold();
+		Lab_Fold();
+		}
+	    });
+     }
+     else
+     {
+      	$("#Exam_Type").html("");
+      	Sec_Fold();
+	Lab_Fold();
+     }
+
+});
+
+
+
+$("#Exam_Type").change(function()
+{
+    var val = $("#C_Date").val();
+    var Exam_Type = $("#Exam_Type").val();
+    var val2="Sem";
+    if(val!="")
+    {
+    $.ajax({
+	type: 'POST',
+	url: 'Ajax/Data_Fetch.php',
+	data: {C_Date:val,Exam_Type:Exam_Type,Fetch:val2},
+	success:function(data)
+		{
+		$("#Sem").html(data);
+		Sec_Fold();
+		Lab_Fold();
+		}
+	    });
+     }
+     else
+     {
+      $("#Sem").html("");
+      Sec_Fold();
+      Lab_Fold();
+     }
+});
+
+
+
+$("#Sem").change(function()
+{
+    var Sem = $("#Sem").val();
+    var C_Date = $("#C_Date").val();
+    var Exam_Type = $("#Exam_Type").val();
+    var val2="Branch";
+    if(Sem!="")
+    {
+    $.ajax({
+	type: 'POST',
+	url: 'Ajax/Data_Fetch.php',
+	data: {C_Date:C_Date,Exam_Type:Exam_Type,Sem:Sem,Fetch:val2},
+	success:function(data)
+		{
+		$("#Branch").html(data);
+		Sec_Fold();
+      		Lab_Fold();
+		}
+	    });
+     }
+     else
+     {
+      $("#Branch").html("");
+      Sec_Fold();
+      Lab_Fold();
+     }
+});
+
+
+$("#Branch").change(function()
+{
+    var Branch = $("#Branch").val();
+    var Sem = $("#Sem").val();
+    var C_Date = $("#C_Date").val();
+    var Exam_Type = $("#Exam_Type").val();
+    var val2="Subject";
+    Sec_Fold();
+    if(Branch!="")
+    {
+    $.ajax({
+	type: 'POST',
+	url: 'Ajax/Data_Fetch.php',
+	data: {C_Date:C_Date,Sem:Sem,Branch:Branch,Exam_Type:Exam_Type,Fetch:val2},
+	success:function(data)
+		{
+		$("#Subject").html(data);
+		Sec_Fold();
+      		Lab_Fold();
+		}
+	    });
+     }
+     else
+     {
+      $("#Subject").html("");
+      Sec_Fold();
+      Lab_Fold();
+     }
+
+});
+
+
+
+
+$("#Subject").change(function()
+{
+
+    var Sub_ID = $("#Subject").val();
+    var Exam_Type = $("#Exam_Type").val();
+    var val2="Check_Section";
+    if(Sub_ID!="")
+    {
+    $.ajax({
+	type: 'POST',
+	url: 'Ajax/Data_Fetch.php',
+	data: {Sub_ID:Sub_ID,Exam_Type:Exam_Type,Fetch:val2},
+	success:function(data)
+		{
+		 if (data==0)
+		 {
+		  Sec_Fold();
+		 }
+		 else if(data!=0)
+		 {
+		   let substrings = data.split('@');
+		   if(substrings[1]==undefined)
+		   {
+		    Lab_Fold();
+		    Sec_Show();
+		    $("#Section").html(data);
+		   }
+		   else
+		   {
+		    Sec_Show();
+		    $("#Section").html(substrings[0]);
+		    Lab_Show();
+		    $("#L_Batch").html(substrings[1]);
+		   }
+
+
+		 }
+		//$("#Subject").html(data);
+		}
+	    });
+     }
+     else
+     {
+      Lab_Fold();
+      Sec_Fold();
+     }
+});
+</script>

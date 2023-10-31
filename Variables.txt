@@ -1,0 +1,186 @@
+Student_ID
+
+Dept_Name
+Program
+Admission_Type
+Admission_Quota
+Allotted_Category
+CET_COMEDK_Order
+CET_COMEDK_TAT
+CET_COMEDK_Rank
+CET_COMEDK_Date
+CET_COMEDK_Fee
+College_Fee
+DOJ
+Praaptha_No
+Batch
+Sem
+Section
+Cycle
+C_Roll_Number
+C_USN
+Old_USN
+Student_Name
+Gender
+Blood
+Aadhaar
+DOB
+Religion
+Caste
+Category
+Mother_Tongue
+State_Domicile
+Father_Name
+Father_Designation
+Father_Income
+Mother_Name
+Mother_Designation
+Mother_Income
+Father_Mob
+Father_Email
+Mother_Mob
+Mother_Email
+Guardian_Mob
+Guardian_Email
+Student_Mob
+Student_Email
+C_Address
+C_Post
+C_Taluk
+C_District
+C_State
+C_Pin
+P_Address
+P_Post
+P_Taluk
+P_District
+P_State
+P_Pin
+Q_Course
+Q_Reg_No
+College_Name
+Pass_Year
+Area_type
+Board_Name
+Board_State
+Leaving_Date
+Total_Max
+Total_Obtain
+Total_Percent
+P_Max
+C_Max
+M_Max
+E_Max
+Tot_PCM_Max
+P_Obtain
+C_Obtain
+M_Obtain
+E_Obtain
+Tot_PCM_Obtain
+PCM_Percent
+D_Create
+D_Update
+
+
+
+
+
+
+
+
+
+
+Create Table Student_Info(
+Student_ID		int,
+Dept_Name		Varchar(50),
+Program		Varchar(10),
+Admission_Type		Varchar(20),
+Admission_Quota	Varchar(15),
+Allotted_Category	Varchar(10),
+CET_COMEDK_Order	Varchar(20),
+CET_COMEDK_TAT		Varchar(20),
+CET_COMEDK_Rank	Varchar(10),
+CET_COMEDK_Date	Varchar(15),
+CET_COMEDK_Fee		Decimal(15,2),
+College_Fee		Decimal(15,2),
+DOJ			date,
+Praaptha_No		Varchar(20),
+Batch			Int,
+Sem			Int,
+Section		Varchar(4),
+Cycle			Varchar(20),
+C_Roll_Number		Varchar(15),
+C_USN			Varchar(15),
+Old_USN		Varchar(15),
+Student_Name		Varchar(50),
+Gender			Varchar(20),
+Blood			Varchar(10),
+Aadhaar		Varchar(15),
+DOB			date,
+Religion		Varchar(20),
+Caste			Varchar(30),
+Category		Varchar(20),
+Mother_Tongue		Varchar(30),
+State_Domicile		Varchar(50),
+Father_Name		Varchar(50),
+Father_Designation	Varchar(70),
+Father_Income		Decimal(15,2),
+Mother_Name		Varchar(50),
+Mother_Designation	Varchar(70),
+Mother_Income		Decimal(15,2),
+Father_Mob		Varchar(11),
+Father_Email		Varchar(70),
+Mother_Mob		Varchar(11),
+Mother_Email		Varchar(70),
+Guardian_Mob		Varchar(11),
+Guardian_Email		Varchar(70),
+Student_Mob		Varchar(11),
+Student_Email		Varchar(70),
+C_Address		Varchar(300),
+C_Post			Varchar(70),
+C_Taluk		Varchar(70),
+C_District		Varchar(70),
+C_State		Varchar(70),
+C_Pin			Varchar(10),
+P_Address		Varchar(300),
+P_Post			Varchar(70),
+P_Taluk		Varchar(70),
+P_District		Varchar(70),
+P_State		Varchar(70),
+P_Pin			Varchar(10),
+Q_Course		Varchar(15),
+Q_Reg_No		Varchar(20),
+College_Name		Varchar(100),
+Pass_Year		Varchar(15),
+Area_type		Varchar(15),
+Board_Name		Varchar(100),
+Board_State		Varchar(70),
+Leaving_Date		Varchar(15),
+Total_Max		Decimal(6,2),
+Total_Obtain		Decimal(6,2),
+Total_Percent		Decimal(6,2),
+P_Max			Decimal(6,2),
+C_Max			Decimal(6,2),
+M_Max			Decimal(6,2),
+E_Max			Decimal(6,2),
+Tot_PCM_Max		Decimal(6,2),
+P_Obtain		Decimal(6,2),
+C_Obtain		Decimal(6,2),
+M_Obtain		Decimal(6,2),
+E_Obtain		Decimal(6,2),
+Tot_PCM_Obtain		Decimal(6,2),
+PCM_Percent		Decimal(6,2),
+D_Create		DateTime,
+D_Update		DateTime)
+
+
+ALTER TABLE `Student_Info`
+  ADD PRIMARY KEY (`Student_ID`);
+
+
+ALTER TABLE `Student_Info`
+  MODIFY `Student_ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;
+
+
+
